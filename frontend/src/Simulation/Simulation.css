@@ -1,0 +1,29 @@
+.simulation {
+    color: black;
+    text-align: left;
+}
+
+.simulation-container {
+    margin: auto;
+    width: 50%;
+}
+
+.columnAlignment {
+    display: flex;
+    flex-direction: column;
+}
+
+.rowAlignment {
+    display: flex;
+    flex-direction: row;
+}
+
+.centerAlignment {
+    align-items: center;
+    justify-content: center;
+}
+
+.leftAlignment {
+    align-items: flex-start;
+    justify-content: space-between;
+}
