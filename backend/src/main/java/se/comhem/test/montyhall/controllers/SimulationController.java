@@ -41,7 +41,7 @@ public class SimulationController {
 
         return simulationResult
                 .thenApplyAsync(result -> {
-                    logger.info("Served {} simulations with switch case set to {}",numberOfSimulations, switchCase);
+                    logger.info("Served {} simulations with switch case set to {}", numberOfSimulations, switchCase);
                     return ResponseEntity.ok(result);
                 })
                 .exceptionally(exception -> {

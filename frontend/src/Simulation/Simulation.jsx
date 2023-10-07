@@ -35,6 +35,11 @@ function Simulation() {
 
     }
 
+    const handleSimulationChange = (event) => {
+        let {value, min, max} = event.target;
+        setNumberOfSimulations(Math.max(Number(min), Math.min(Number(max), Number(value))));
+    }
+
     useEffect(() => {
         if(simulationResult !== null)
             setChartData(updateSimulationData(simulationResult["correctChoices"], simulationResult["incorrectChoices"]))
@@ -45,7 +50,7 @@ function Simulation() {
             <Form>
                 <Form.Group className="mb-3">
                     <Form.Label>Number of simulations:</Form.Label>
-                    <Form.Control min="1" max="1000000000" type="number" required="required" placeholder="Enter number of simulations" value={numberOfSimulations} onChange={event => setNumberOfSimulations(event.target.value)} />
+                    <Form.Control min="1" max="2147483647" type="number" required="required" placeholder="Enter number of simulations" value={numberOfSimulations} onChange={handleSimulationChange} />
                 </Form.Group>
 
                 <Form.Group className="mb-3">
@@ -55,13 +60,11 @@ function Simulation() {
 
                 <Form.Group className="rowAlignment leftAlignment">
                     <Button className="btn btn-primary" type="submit" onClick={getSimulation} disabled={isLoading}>Simulate</Button>
-                    <Spinner animation="border" hidden={!isLoading} />
+                    {isLoading && <Spinner animation="border"/>}
                 </Form.Group>
             </Form>
-            <div className="centerAlignment" >
-                <Doughnut
-                    data={chartData}
-                />
+            <div className="centerAlignment">
+                {simulationResult != null && <Doughnut data={chartData}/>}
             </div>
         </div>
     );
