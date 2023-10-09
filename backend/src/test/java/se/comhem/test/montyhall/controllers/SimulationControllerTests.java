@@ -38,10 +38,7 @@ public class SimulationControllerTests {
         CompletableFuture<MontyHallSimulationResult> result = CompletableFuture.completedFuture(new MontyHallSimulationResult(700,300));
         given(service.runMontyHallSimulation(1000, true)).willReturn(result);
 
-        MvcResult mvcResult = mvcPerform(1000, true)
-                .andExpect(request().asyncStarted()).andReturn();
-
-        mvc.perform(asyncDispatch(mvcResult))
+        mvcPerform(1000, true)
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("correctChoices").value(700))

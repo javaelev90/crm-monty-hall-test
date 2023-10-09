@@ -1,6 +1,5 @@
 package se.comhem.test.montyhall.controllers;
 
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -15,7 +14,9 @@ import javax.validation.ValidationException;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
-import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+
+import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
 
 
@@ -32,30 +33,27 @@ public class SimulationController {
         this.simulationService = simulationService;
     }
 
+
     @GetMapping(value = "/monty-hall", produces = MediaType.APPLICATION_JSON_VALUE)
-    public CompletableFuture<ResponseEntity<MontyHallSimulationResult>> getMontyHallSimulation(
+    public ResponseEntity<MontyHallSimulationResult> getMontyHallSimulation(
             @RequestParam @NotNull @Min(1) @Max(Integer.MAX_VALUE) int numberOfSimulations,
-            @RequestParam boolean switchCase) {
+            @RequestParam boolean switchCase) throws ExecutionException, InterruptedException {
 
-        CompletableFuture<MontyHallSimulationResult> simulationResult = simulationService.runMontyHallSimulation(numberOfSimulations, switchCase);
-
-        return simulationResult
-                .thenApplyAsync(result -> {
-                    logger.info("Served {} simulations with switch case set to {}", numberOfSimulations, switchCase);
-                    return ResponseEntity.ok(result);
-                })
-                .exceptionally(exception -> {
-                    logger.error(exception.getMessage());
-                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-                });
+        return ResponseEntity.ok(simulationService.runMontyHallSimulation(numberOfSimulations, switchCase).get());
     }
 
     @ExceptionHandler({ValidationException.class, MethodArgumentTypeMismatchException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public final String exceptionHandlerParamExceptions(Exception exception){
         logger.warn("Request was denied with cause: {}", exception.getMessage());
-        // TODO: should not leak internal error info
-        return exception.getMessage();
+        return "The request you sent was not accepted: " + exception.getMessage();
+    }
+
+    @ExceptionHandler({ExecutionException.class, InterruptedException.class})
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public final String exceptionHandlerInternalError(Exception exception){
+        logger.error("Internal server error: {}", exception.getMessage());
+        return "Something went wrong server side.";
     }
 
 }
