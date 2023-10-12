@@ -15,7 +15,8 @@ public class SimulationHelper {
             workAmounts.add(workAmount);
 
         if(remainder > 0)
-            workAmounts.add(numberOfThreads - 1, remainder);
+            workAmounts.add(numberOfThreads - 1,
+                    workAmounts.get(numberOfThreads - 1) + remainder);
 
         return workAmounts;
     }
