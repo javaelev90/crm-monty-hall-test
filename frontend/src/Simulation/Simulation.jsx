@@ -8,6 +8,7 @@ import Form from 'react-bootstrap/Form';
 import { Doughnut } from "react-chartjs-2";
 import updateSimulationData from "./util/chartUtils"
 import {Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
+import {SimulationForm} from "./form/Form";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -47,6 +48,7 @@ function Simulation() {
 
     return (
         <div className="simulation columnAlignment centerAlignment simulation-container">
+            <SimulationForm />
             <Form>
                 <Form.Group className="mb-3">
                     <Form.Label>Number of simulations:</Form.Label>
