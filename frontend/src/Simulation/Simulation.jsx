@@ -1,6 +1,6 @@
 import React from "react";
 import './Simulation.css';
-import {useState, useEffect} from "react";
+import {useState, useEffect, useCallback} from "react";
 import axios from "axios";
 import Spinner from 'react-bootstrap/Spinner';
 import Button from 'react-bootstrap/Button';
@@ -19,7 +19,7 @@ function Simulation() {
     const [numberOfSimulations, setNumberOfSimulations] = useState(1);
     const [switchCase, setSwitchCase] = useState(false);
 
-    const getSimulation = async (event) => {
+    const getSimulation = useCallback(async (event) => {
         event.preventDefault();
         setIsLoading(true);
 
@@ -34,12 +34,12 @@ function Simulation() {
             })
             .finally(() => setIsLoading(false));
 
-    }
+    }, []);
 
-    const handleSimulationChange = (event) => {
+    const handleSimulationChange = useCallback((event) => {
         let {value, min, max} = event.target;
         setNumberOfSimulations(Math.max(Number(min), Math.min(Number(max), Number(value))));
-    }
+    }, [numberOfSimulations]);
 
     useEffect(() => {
         if(simulationResult !== null)
@@ -48,7 +48,13 @@ function Simulation() {
 
     return (
         <div className="simulation columnAlignment centerAlignment simulation-container">
-            <SimulationForm />
+            {/*<SimulationForm switchCase={switchCase}*/}
+            {/*                setSwitchCase={setSwitchCase}*/}
+            {/*                getSimulation={getSimulation}*/}
+            {/*                isLoading={isLoading}*/}
+            {/*                numberOfSimulations={numberOfSimulations}*/}
+            {/*                handleSimulationChange={handleSimulationChange}*/}
+            {/*/>*/}
             <Form>
                 <Form.Group className="mb-3">
                     <Form.Label>Number of simulations:</Form.Label>
